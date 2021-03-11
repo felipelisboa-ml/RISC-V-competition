@@ -34,16 +34,15 @@ module fifo_v3 #(
     input  logic  pop_i             // pop head from queue
 );
 
-    // We need 9 bits for pointers, since the depth is 512
-    logic [8:0] rd_count;
-    logic [8:0] wr_count;
-    assing usage_o = rd_count - wr_count;
-
     // 512 entries by 36 bits (18Kb FIFO)
     logic almost_empty;
     logic almost_full;
     logic read_error;
     logic write_error;
+
+    // We need 9 bits for pointers, since the depth is 512
+    logic [8:0] rd_count;
+    logic [8:0] wr_count;
 
     FIFO_SYNC_MACRO #(
         .DEVICE("7SERIES"), // Target Device: "7SERIES"
@@ -68,5 +67,7 @@ module fifo_v3 #(
         .RST(rst_ni), // 1-bit input reset
         .WREN(push_i) // 1-bit input write enable
     );
+
+    assing usage_o = rd_count - wr_count;
 
 endmodule // fifo_v3
