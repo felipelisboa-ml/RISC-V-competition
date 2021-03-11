@@ -9,6 +9,8 @@
 // specific language governing permissions and limitations under the License.
 
 // Author: Florian Zaruba <zarubaf@iis.ee.ethz.ch>
+Library UNISIM;
+use UNISIM.vcomponents.all;
 
 module fifo_v3 #(
     parameter bit          FALL_THROUGH = 1'b0, // fifo is in fall-through mode
