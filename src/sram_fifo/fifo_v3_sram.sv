@@ -34,26 +34,25 @@ module fifo_v3 #(
     input  logic  pop_i             // pop head from queue
 );
 
-    assing FWFT = FALL_THROUGH ? 0 : "FALSE" : "TRUE"
+    // We need 9 bits for pointers, since the depth is 512
+    logic [8:0] rd_count;
+    logic [8:0] wr_count;
+    assing usage_o = rd_count - wr_count;
 
     // 512 entries by 36 bits (18Kb FIFO)
     logic almost_empty;
     logic almost_full;
-    logic [8:0] rd_count;
-    logic [8:0] wr_count;
     logic read_error;
     logic write_error;
-    logic read_enable;
-    logic write_enable;
 
-    FIFO_DUALCLOCK_MACRO #(
-        .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold, in this case, it will be 128
+    FIFO_SYNC_MACRO #(
+        .DEVICE("7SERIES"), // Target Device: "7SERIES"
+        .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
         .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
-        .DATA_WIDTH(36), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
-        .DEVICE("7SERIES"), // Target device: "7SERIES"
-        .FIFO_SIZE ("18Kb"), // Target BRAM: "18Kb" or "36Kb"
-        .FIRST_WORD_FALL_THROUGH (FWFT) // Sets the FIfor FWFT to "TRUE" or "FALSE"
-    ) FIFO_DUALCLOCK_MACRO_inst (
+        .DATA_WIDTH(DATA_WIDTH+($clog2(DATA_WIDTH)-1)), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+        .DO_REG(0), // Optional output register (0 or 1)
+        .FIFO_SIZE ("18Kb") // Target BRAM: "18Kb" or "36Kb"
+    ) FIFO_SYNC_MACRO_inst (
         .ALMOSTEMPTY(almost_empty), // 1-bit output almost empty
         .ALMOSTFULL(almost_full), // 1-bit output almost full
         .DO(data_o), // Output data, width defined by DATA_WIDTH parameter
@@ -63,12 +62,11 @@ module fifo_v3 #(
         .RDERR(read_error), // 1-bit output read error
         .WRCOUNT(wr_count), // Output write count, width determined by FIfor depth
         .WRERR(write_error), // 1-bit output write error
+        .CLK(clk_i), // 1-bit input clock
         .DI(data_i), // Input data, width defined by DATA_WIDTH parameter
-        .RDCLK(clk_i), // 1-bit input read clock
-        .RDEN(read_enable), // 1-bit input read enable
+        .RDEN(pop_i), // 1-bit input read enable
         .RST(rst_ni), // 1-bit input reset
-        .WRCLK(clk_i), // 1-bit input write clock
-        .WREN(write_enable) // 1-bit input write enable
+        .WREN(push_i) // 1-bit input write enable
     );
 
 endmodule // fifo_v3
