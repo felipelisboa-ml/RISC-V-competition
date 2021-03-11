@@ -60,6 +60,7 @@ sources:
     - src/mult.sv
     - src/load_unit.sv
     - src/issue_read_operands.sv
+    - src/sram_fifo/fifo_v3_sram.sv
     - src/pmp/src/pmp_entry.sv
     - src/pmp/src/pmp.sv
     - src/synopsys_sram.sv
@@ -180,7 +181,6 @@ sources:
     - src/common_cells/src/cdc_2phase.sv
     - src/common_cells/src/spill_register.sv
     - src/common_cells/src/edge_detect.sv
-    - src/common_cells/src/fifo_v3.sv
     - src/common_cells/src/deprecated/fifo_v2.sv
     - src/common_cells/src/deprecated/fifo_v1.sv
     - src/common_cells/src/lzc.sv
