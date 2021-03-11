@@ -68,6 +68,6 @@ module fifo_v3 #(
         .WREN(push_i) // 1-bit input write enable
     );
 
-    assing usage_o = rd_count - wr_count;
+    assign usage_o = rd_count[8:0] - wr_count[8:0];
 
 endmodule // fifo_v3
