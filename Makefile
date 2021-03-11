@@ -1,5 +1,5 @@
 # Copyright (c) 2020 Thales.
-# 
+#
 # Copyright and related rights are licensed under the Apache
 # License, Version 2.0 (the "License"); you may not use this file except in
 # compliance with the License.  You may obtain a copy of the License at
@@ -139,7 +139,8 @@ src :=  $(filter-out src/ariane_regfile.sv, $(wildcard src/*.sv))              \
         src/riscv-dbg/src/dm_top.sv                                            \
         src/riscv-dbg/debug_rom/debug_rom.sv                                   \
         src/register_interface/src/apb_to_reg.sv                               \
-        src/axi/src/axi_multicut.sv                                            \
+        src/axi/src/axi_multicut.sv																						 \
+				src/sram_fifo/fifo_v3_sram.sv                                          \
         src/common_cells/src/deprecated/generic_fifo.sv                        \
         src/common_cells/src/deprecated/pulp_sync.sv                           \
         src/common_cells/src/deprecated/find_first_one.sv                      \
@@ -167,7 +168,6 @@ src :=  $(filter-out src/ariane_regfile.sv, $(wildcard src/*.sv))              \
         src/common_cells/src/stream_arbiter_flushable.sv                       \
         src/common_cells/src/deprecated/fifo_v1.sv                             \
         src/common_cells/src/deprecated/fifo_v2.sv                             \
-        src/common_cells/src/fifo_v3.sv                                        \
         src/common_cells/src/lzc.sv                                            \
         src/common_cells/src/popcount.sv                                       \
         src/common_cells/src/rr_arb_tree.sv                                    \
@@ -311,7 +311,7 @@ cva6_fpga_ddr: $(ariane_pkg) $(util) $(src) $(fpga_src) $(uart_src)
 	cd fpga && make cva6_fpga PS7_DDR=1 BRAM=0 XILINX_PART=$(XILINX_PART) XILINX_BOARD=$(XILINX_BOARD) CLK_PERIOD_NS=$(CLK_PERIOD_NS) BATCH_MODE=$(BATCH_MODE)
 
 
-program_cva6_fpga: 
+program_cva6_fpga:
 	@echo "[FPGA] Program FPGA"
 	cd fpga && make program_cva6_fpga BOARD=$(BOARD) XILINX_PART=$(XILINX_PART) XILINX_BOARD=$(XILINX_BOARD) CLK_PERIOD_NS=$(CLK_PERIOD_NS) BATCH_MODE=$(BATCH_MODE)
 
@@ -326,5 +326,4 @@ clean:
 .PHONY:
 	build sim benchmark clean   \
 	$(riscv-benchmarks)          \
-	check-benchmarks                 
-                        
+	check-benchmarks
