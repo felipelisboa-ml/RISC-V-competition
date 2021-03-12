@@ -9,9 +9,6 @@
 // specific language governing permissions and limitations under the License.
 
 // Author: Florian Zaruba <zarubaf@iis.ee.ethz.ch>
-Library UNISIM;
-use UNISIM.vcomponents.all;
-
 module fifo_v3 #(
     parameter bit          FALL_THROUGH = 1'b0, // fifo is in fall-through mode
     parameter int unsigned DATA_WIDTH   = 32,   // default data width if the fifo is of type logic
@@ -46,11 +43,42 @@ module fifo_v3 #(
     logic [8:0] rd_count;
     logic [8:0] wr_count;
 
+    logic wReset = 1'b1;
+    logic wResetQ;
+
+    SRL16E #(
+        .INIT(16'hFF00)
+    ) mReset(
+        .CLK  (clk_i),
+        .CE   (1'b1),
+        .A0   (1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1),
+        .D    (rst_ni),
+        .Q    (wResetQ)
+    );
+    //Toda vez que rolar um clock o reset acontece com 4 ciclos de delay
+    always_ff @(posedge clk_i) begin : hold_reset
+          wReset <= wResetQ;
+    end
+
+    logic wEnable = 0;
+    logic wEnableQ;
+    SRL16E #(
+        .INIT(16'hFFF0)
+    ) mEnable(
+      .CLK ( clk_i ),
+      .CE  ( 1'b1 ),
+      .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
+      .D   ( 1'b0 ),
+      .Q   ( wEnableQ ) );
+    always @( posedge clk_i ) begin : hold_enable
+        wEnable    <= ~ wEnableQ;
+    end
+
     FIFO_SYNC_MACRO #(
         .DEVICE("7SERIES"), // Target Device: "7SERIES"
         .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
         .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
-        .DATA_WIDTH(DATA_WIDTH+($clog2(DATA_WIDTH)-1)), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+        .DATA_WIDTH(36), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
         .DO_REG(0), // Optional output register (0 or 1)
         .FIFO_SIZE ("18Kb") // Target BRAM: "18Kb" or "36Kb"
     ) FIFO_SYNC_MACRO_inst (
@@ -65,9 +93,9 @@ module fifo_v3 #(
         .WRERR(write_error), // 1-bit output write error
         .CLK(clk_i), // 1-bit input clock
         .DI(data_i), // Input data, width defined by DATA_WIDTH parameter
-        .RDEN(pop_i), // 1-bit input read enable
-        .RST(rst_ni), // 1-bit input reset
-        .WREN(push_i) // 1-bit input write enable
+        .RDEN(pop_i&&wEnable), // 1-bit input read enable
+        .RST(wReset), // 1-bit input reset
+        .WREN(push_i&&wEnable) // 1-bit input write enable
     );
 
     assign usage_o = rd_count[8:0] - wr_count[8:0];

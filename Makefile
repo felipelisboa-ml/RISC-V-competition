@@ -230,7 +230,10 @@ endif
 # Build the TB and module using QuestaSim
 build: $(library) $(library)/.build-srcs $(library)/.build-tb
 	# Optimize top level
-	vopt$(questa_version) $(compile_flag) -work $(library)  $(top_level) -o $(top_level)_optimized +acc -check_synthesis
+	vmap unisim_ver /cal/homes/flisboa/RISC-V/OficialRepo/simlibs/unisim_ver
+	vmap unimacro /cal/homes/flisboa/RISC-V/OficialRepo/simlibs/unimacro
+	vlog +acc /comelec/softs/opt/Xilinx/Vivado/current/data/verilog/src/glbl.v
+	vopt$(questa_version) $(compile_flag) -L unimacro -L unisim_ver  -work $(library)  glbl $(top_level) -o $(top_level)_optimized +acc -check_synthesis
 
 # src files
 $(library)/.build-srcs: $(util) $(library)
@@ -257,7 +260,9 @@ $(library):
 # if you want to run in batch mode, use make <testname> batch-mode=1
 sim: build benchmark
 	echo $(riscv-benchmarks)
-	vsim${questa_version} +permissive $(questa-flags) $(questa-cmd) -lib $(library) +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) \
+	vmap unisim_ver /cal/homes/flisboa/RISC-V/OficialRepo/simlibs/unisim_ver
+	vmap unimacro /cal/homes/flisboa/RISC-V/OficialRepo/simlibs/unimacro
+	vsim${questa_version} -c -suppress 3009 +permissive $(questa-flags) $(questa-cmd) -L unimacro -L unisim_ver -lib $(library) +MAX_CYCLES=$(max_cycles) +UVM_TESTNAME=$(test_case) \
 	 $(uvm-flags) $(QUESTASIM_FLAGS)  \
 	${top_level}_optimized +permissive-off +binary_mem=$(app_path)/$(APP).mem | tee sim.log
 
