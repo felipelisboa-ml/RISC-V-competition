@@ -1,0 +1,74 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (lin64) Build 2902540 Wed May 27 19:54:35 MDT 2020
+| Date         : Mon Mar 15 16:59:43 2021
+| Host         : tp-1a201-07 running 64-bit Debian GNU/Linux 10 (buster)
+| Command      : report_timing -nworst 1 -delay_type max -sort_by group -file reports_cva6_ooc_synth/cva6_ooc.timing.rpt
+| Design       : ariane
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+-------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 i_frontend/icache_data_q_reg[17]/C
+                            (rising edge-triggered cell FDCE)
+  Destination:            i_frontend/npc_q_reg[28]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        12.510ns  (logic 4.458ns (35.635%)  route 8.052ns (64.365%))
+  Logic Levels:           18  (CARRY4=7 FDCE=1 LUT5=3 LUT6=7)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         FDCE                         0.000     0.000 r  i_frontend/icache_data_q_reg[17]/C
+                         FDCE (Prop_fdce_C_Q)         0.518     0.518 f  i_frontend/icache_data_q_reg[17]/Q
+                         net (fo=37, unplaced)        1.040     1.558    i_frontend/i_instr_realign/unaligned_instr_q_reg[15]_0[17]
+                         LUT6 (Prop_lut6_I0_O)        0.295     1.853 f  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_25__0/O
+                         net (fo=4, unplaced)         1.135     2.988    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_25__0_n_0
+                         LUT5 (Prop_lut5_I0_O)        0.124     3.112 f  i_frontend/i_instr_realign/stack_q[1][valid]_i_27/O
+                         net (fo=1, unplaced)         1.111     4.223    i_frontend/i_instr_realign/stack_q[1][valid]_i_27_n_0
+                         LUT6 (Prop_lut6_I1_O)        0.124     4.347 f  i_frontend/i_instr_realign/stack_q[1][valid]_i_12/O
+                         net (fo=35, unplaced)        0.975     5.322    i_frontend/i_instr_realign/stack_q[1][valid]_i_12_n_0
+                         LUT6 (Prop_lut6_I2_O)        0.124     5.446 f  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_163/O
+                         net (fo=2, unplaced)         0.460     5.906    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_163_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.124     6.030 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_164/O
+                         net (fo=17, unplaced)        0.505     6.535    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_164_n_0
+                         LUT5 (Prop_lut5_I2_O)        0.124     6.659 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_206/O
+                         net (fo=1, unplaced)         0.665     7.324    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_206_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.637     7.961 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_147/CO[3]
+                         net (fo=1, unplaced)         0.009     7.970    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_147_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.087 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_138/CO[3]
+                         net (fo=1, unplaced)         0.000     8.087    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_138_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.204 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_129/CO[3]
+                         net (fo=1, unplaced)         0.000     8.204    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_129_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.321 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_120/CO[3]
+                         net (fo=1, unplaced)         0.000     8.321    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_120_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.331     8.652 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_111/O[3]
+                         net (fo=1, unplaced)         0.618     9.270    i_frontend/i_instr_realign/predict_address0[21]
+                         LUT6 (Prop_lut6_I3_O)        0.307     9.577 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_54/O
+                         net (fo=1, unplaced)         0.449    10.026    i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_54_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.124    10.150 r  i_frontend/i_instr_realign/genblk5_0.fifo_18_bl_1.fifo_18_bl_1_i_13__0/O
+                         net (fo=3, unplaced)         0.467    10.617    i_frontend/i_instr_realign/DI[21]
+                         LUT5 (Prop_lut5_I4_O)        0.124    10.741 r  i_frontend/i_instr_realign/npc_q[24]_i_9/O
+                         net (fo=1, unplaced)         0.000    10.741    i_frontend/i_instr_realign/npc_q[24]_i_9_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    11.254 r  i_frontend/i_instr_realign/npc_q_reg[24]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000    11.254    i_frontend/i_instr_realign/npc_q_reg[24]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.331    11.585 r  i_frontend/i_instr_realign/npc_q_reg[28]_i_3/O[3]
+                         net (fo=1, unplaced)         0.618    12.203    i_frontend/i_instr_queue/i_fifo_address/FIFO_SYNC_MACRO_inst/data5[25]
+                         LUT6 (Prop_lut6_I3_O)        0.307    12.510 r  i_frontend/i_instr_queue/i_fifo_address/FIFO_SYNC_MACRO_inst/npc_q[28]_i_1/O
+                         net (fo=1, unplaced)         0.000    12.510    i_frontend/i_instr_queue_n_12
+                         FDCE                                         r  i_frontend/npc_q_reg[28]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
