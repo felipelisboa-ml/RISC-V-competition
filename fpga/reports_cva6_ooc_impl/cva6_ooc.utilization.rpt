@@ -1,0 +1,146 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (lin64) Build 2902540 Wed May 27 19:54:35 MDT 2020
+| Date         : Mon Mar 15 16:02:14 2021
+| Host         : tp-1a201-07 running 64-bit Debian GNU/Linux 10 (buster)
+| Command      : report_utilization -hierarchical -file reports_cva6_ooc_impl/cva6_ooc.utilization.rpt
+| Design       : ariane
+| Device       : 7z020clg400-1
+| Design State : Synthesized
+-------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-------------------------------------------+-----------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                  Instance                 |            Module           | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------------------+-----------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| ariane                                    |                       (top) |      14648 |      14648 |       0 |    0 | 9285 |     36 |      0 |          4 |
+|   (ariane)                                |                       (top) |          0 |          0 |       0 |    0 |    2 |      0 |      0 |          0 |
+|   csr_regfile_i                           |                 csr_regfile |        400 |        400 |       0 |    0 |  921 |      0 |      0 |          0 |
+|   ex_stage_i                              |                    ex_stage |       1961 |       1961 |       0 |    0 | 1141 |      0 |      0 |          4 |
+|     csr_buffer_i                          |                  csr_buffer |        921 |        921 |       0 |    0 |   13 |      0 |      0 |          0 |
+|     i_mult                                |                        mult |        230 |        230 |       0 |    0 |  157 |      0 |      0 |          4 |
+|       i_div                               |                      serdiv |        146 |        146 |       0 |    0 |  112 |      0 |      0 |          0 |
+|       i_multiplier                        |                  multiplier |         84 |         84 |       0 |    0 |   45 |      0 |      0 |          4 |
+|     lsu_i                                 |             load_store_unit |        810 |        810 |       0 |    0 |  971 |      0 |      0 |          0 |
+|       (lsu_i)                             |             load_store_unit |          0 |          0 |       0 |    0 |   32 |      0 |      0 |          0 |
+|       i_load_unit                         |                   load_unit |         57 |         57 |       0 |    0 |   22 |      0 |      0 |          0 |
+|       i_pipe_reg_load                     |                   shift_reg |        267 |        267 |       0 |    0 |   36 |      0 |      0 |          0 |
+|       i_store_unit                        |                  store_unit |        286 |        286 |       0 |    0 |  705 |      0 |      0 |          0 |
+|         (i_store_unit)                    |                  store_unit |         22 |         22 |       0 |    0 |   51 |      0 |      0 |          0 |
+|         i_amo_buffer                      |                  amo_buffer |         52 |         52 |       0 |    0 |   72 |      0 |      0 |          0 |
+|           i_amo_fifo                      |     fifo_v3__parameterized1 |         52 |         52 |       0 |    0 |   72 |      0 |      0 |          0 |
+|         store_buffer_i                    |                store_buffer |        212 |        212 |       0 |    0 |  582 |      0 |      0 |          0 |
+|       lsu_bypass_i                        |                  lsu_bypass |        200 |        200 |       0 |    0 |  176 |      0 |      0 |          0 |
+|   i_cache_subsystem                       |          wt_cache_subsystem |       5187 |       5187 |       0 |    0 | 2020 |     36 |      0 |          0 |
+|     i_adapter                             |              wt_axi_adapter |       1521 |       1521 |       0 |    0 |  613 |      0 |      0 |          0 |
+|       (i_adapter)                         |              wt_axi_adapter |       1211 |       1211 |       0 |    0 |  277 |      0 |      0 |          0 |
+|       i_axi_shim                          |                    axi_shim |          3 |          3 |       0 |    0 |    2 |      0 |      0 |          0 |
+|       i_b_fifo                            |     fifo_v3__parameterized6 |         25 |         25 |       0 |    0 |   15 |      0 |      0 |          0 |
+|       i_dcache_data_fifo                  |     fifo_v3__parameterized4 |        205 |        205 |       0 |    0 |  218 |      0 |      0 |          0 |
+|       i_icache_data_fifo                  |     fifo_v3__parameterized3 |         32 |         32 |       0 |    0 |   64 |      0 |      0 |          0 |
+|       i_rd_dcache_id                      |     fifo_v3__parameterized5 |         14 |         14 |       0 |    0 |   15 |      0 |      0 |          0 |
+|       i_rd_icache_id                      |  fifo_v3__parameterized5_52 |          7 |          7 |       0 |    0 |    3 |      0 |      0 |          0 |
+|       i_rr_arb_tree                       | rr_arb_tree__parameterized5 |          5 |          5 |       0 |    0 |    4 |      0 |      0 |          0 |
+|       i_wr_dcache_id                      |  fifo_v3__parameterized5_53 |         19 |         19 |       0 |    0 |   15 |      0 |      0 |          0 |
+|     i_wt_dcache                           |                   wt_dcache |       3355 |       3355 |       0 |    0 | 1327 |     24 |      0 |          0 |
+|       gen_rd_ports[0].i_wt_dcache_ctrl    |              wt_dcache_ctrl |         16 |         16 |       0 |    0 |   13 |      0 |      0 |          0 |
+|       gen_rd_ports[1].i_wt_dcache_ctrl    |           wt_dcache_ctrl_18 |        107 |        107 |       0 |    0 |   47 |      0 |      0 |          0 |
+|       i_wt_dcache_mem                     |               wt_dcache_mem |        634 |        634 |       0 |    0 |   15 |     24 |      0 |          0 |
+|         (i_wt_dcache_mem)                 |               wt_dcache_mem |        241 |        241 |       0 |    0 |   13 |      0 |      0 |          0 |
+|         gen_data_banks[0].i_data_sram     |        sram__parameterized1 |          0 |          0 |       0 |    0 |    0 |      8 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_44 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[1].i_ram                |          SyncSpRamBeNx64_45 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[2].i_ram                |          SyncSpRamBeNx64_46 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[3].i_ram                |          SyncSpRamBeNx64_47 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[4].i_ram                |          SyncSpRamBeNx64_48 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[5].i_ram                |          SyncSpRamBeNx64_49 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[6].i_ram                |          SyncSpRamBeNx64_50 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[7].i_ram                |          SyncSpRamBeNx64_51 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_data_banks[1].i_data_sram     |     sram__parameterized1_19 |        320 |        320 |       0 |    0 |    0 |      8 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_36 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[1].i_ram                |          SyncSpRamBeNx64_37 |         64 |         64 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[2].i_ram                |          SyncSpRamBeNx64_38 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[3].i_ram                |          SyncSpRamBeNx64_39 |         64 |         64 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[4].i_ram                |          SyncSpRamBeNx64_40 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[5].i_ram                |          SyncSpRamBeNx64_41 |         64 |         64 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[6].i_ram                |          SyncSpRamBeNx64_42 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[7].i_ram                |          SyncSpRamBeNx64_43 |        128 |        128 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[0].i_tag_sram       |                     sram_20 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_35 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[1].i_tag_sram       |                     sram_21 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_34 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[2].i_tag_sram       |                     sram_22 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_33 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[3].i_tag_sram       |                     sram_23 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_32 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[4].i_tag_sram       |                     sram_24 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_31 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[5].i_tag_sram       |                     sram_25 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_30 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[6].i_tag_sram       |                     sram_26 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_29 |          8 |          8 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         gen_tag_srams[7].i_tag_sram       |                     sram_27 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|           genblk1[0].i_ram                |          SyncSpRamBeNx64_28 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         i_rr_arb_tree                     | rr_arb_tree__parameterized4 |          3 |          3 |       0 |    0 |    2 |      0 |      0 |          0 |
+|       i_wt_dcache_missunit                |          wt_dcache_missunit |        257 |        257 |       0 |    0 |  114 |      0 |      0 |          0 |
+|         (i_wt_dcache_missunit)            |          wt_dcache_missunit |        206 |        206 |       0 |    0 |   58 |      0 |      0 |          0 |
+|         i_exp_backoff                     |                 exp_backoff |         44 |         44 |       0 |    0 |   48 |      0 |      0 |          0 |
+|         i_lfsr_inv                        |   lfsr_8bit__parameterized0 |          7 |          7 |       0 |    0 |    8 |      0 |      0 |          0 |
+|       i_wt_dcache_wbuffer                 |           wt_dcache_wbuffer |       2341 |       2341 |       0 |    0 | 1138 |      0 |      0 |          0 |
+|         (i_wt_dcache_wbuffer)             |           wt_dcache_wbuffer |        899 |        899 |       0 |    0 | 1101 |      0 |      0 |          0 |
+|         i_clean_rr                        | rr_arb_tree__parameterized3 |        119 |        119 |       0 |    0 |    3 |      0 |      0 |          0 |
+|         i_dirty_rr                        | rr_arb_tree__parameterized2 |        883 |        883 |       0 |    0 |   12 |      0 |      0 |          0 |
+|         i_rtrn_id_fifo                    |     fifo_v3__parameterized2 |        428 |        428 |       0 |    0 |   15 |      0 |      0 |          0 |
+|         i_tx_id_rr                        | rr_arb_tree__parameterized1 |         12 |         12 |       0 |    0 |    7 |      0 |      0 |          0 |
+|     i_wt_icache                           |                   wt_icache |        311 |        311 |       0 |    0 |   80 |     12 |      0 |          0 |
+|       (i_wt_icache)                       |                   wt_icache |         30 |         30 |       0 |    0 |   72 |      0 |      0 |          0 |
+|       gen_sram[0].data_sram               |        sram__parameterized0 |         34 |         34 |       0 |    0 |    0 |      2 |      0 |          0 |
+|         genblk1[0].i_ram                  |          SyncSpRamBeNx64_16 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[1].i_ram                  |          SyncSpRamBeNx64_17 |         34 |         34 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[0].tag_sram                |                        sram |         54 |         54 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[0].i_ram                  |          SyncSpRamBeNx64_15 |         54 |         54 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[1].data_sram               |      sram__parameterized0_1 |         34 |         34 |       0 |    0 |    0 |      2 |      0 |          0 |
+|         genblk1[0].i_ram                  |          SyncSpRamBeNx64_13 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[1].i_ram                  |          SyncSpRamBeNx64_14 |         34 |         34 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[1].tag_sram                |                      sram_2 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[0].i_ram                  |          SyncSpRamBeNx64_12 |          9 |          9 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[2].data_sram               |      sram__parameterized0_3 |         34 |         34 |       0 |    0 |    0 |      2 |      0 |          0 |
+|         genblk1[0].i_ram                  |          SyncSpRamBeNx64_10 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[1].i_ram                  |          SyncSpRamBeNx64_11 |         34 |         34 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[2].tag_sram                |                      sram_4 |         48 |         48 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[0].i_ram                  |           SyncSpRamBeNx64_9 |         48 |         48 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[3].data_sram               |      sram__parameterized0_5 |         53 |         53 |       0 |    0 |    0 |      2 |      0 |          0 |
+|         genblk1[0].i_ram                  |           SyncSpRamBeNx64_7 |          0 |          0 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[1].i_ram                  |           SyncSpRamBeNx64_8 |         53 |         53 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       gen_sram[3].tag_sram                |                      sram_6 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|         genblk1[0].i_ram                  |             SyncSpRamBeNx64 |         10 |         10 |       0 |    0 |    0 |      1 |      0 |          0 |
+|       i_lfsr                              |                   lfsr_8bit |          5 |          5 |       0 |    0 |    8 |      0 |      0 |          0 |
+|   i_frontend                              |                    frontend |       1950 |       1950 |       0 |    0 | 2161 |      0 |      0 |          0 |
+|     (i_frontend)                          |                    frontend |         17 |         17 |       0 |    0 |  139 |      0 |      0 |          0 |
+|     i_bht                                 |                         bht |        429 |        429 |       0 |    0 |  384 |      0 |      0 |          0 |
+|     i_btb                                 |                         btb |        306 |        306 |       0 |    0 | 1056 |      0 |      0 |          0 |
+|     i_instr_queue                         |                 instr_queue |        588 |        588 |       0 |    0 |  465 |      0 |      0 |          0 |
+|       (i_instr_queue)                     |                 instr_queue |          5 |          5 |       0 |    0 |   36 |      0 |      0 |          0 |
+|       gen_instr_fifo[0].i_fifo_instr_data |                     fifo_v3 |        465 |        465 |       0 |    0 |  147 |      0 |      0 |          0 |
+|       gen_instr_fifo[1].i_fifo_instr_data |                   fifo_v3_0 |         72 |         72 |       0 |    0 |  147 |      0 |      0 |          0 |
+|       i_fifo_address                      |     fifo_v3__parameterized0 |         46 |         46 |       0 |    0 |  135 |      0 |      0 |          0 |
+|     i_instr_realign                       |               instr_realign |        593 |        593 |       0 |    0 |   51 |      0 |      0 |          0 |
+|     i_ras                                 |                         ras |         17 |         17 |       0 |    0 |   66 |      0 |      0 |          0 |
+|   i_perf_counters                         |               perf_counters |        129 |        129 |       0 |    0 |  448 |      0 |      0 |          0 |
+|   id_stage_i                              |                    id_stage |         90 |         90 |       0 |    0 |  168 |      0 |      0 |          0 |
+|   issue_stage_i                           |                 issue_stage |       4931 |       4931 |       0 |    0 | 2424 |      0 |      0 |          0 |
+|     i_issue_read_operands                 |         issue_read_operands |       2249 |       2249 |       0 |    0 | 1183 |      0 |      0 |          0 |
+|       (i_issue_read_operands)             |         issue_read_operands |       1673 |       1673 |       0 |    0 |  191 |      0 |      0 |          0 |
+|       i_ariane_regfile                    |              ariane_regfile |        576 |        576 |       0 |    0 |  992 |      0 |      0 |          0 |
+|     i_scoreboard                          |                  scoreboard |       2682 |       2682 |       0 |    0 | 1241 |      0 |      0 |          0 |
++-------------------------------------------+-----------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+
