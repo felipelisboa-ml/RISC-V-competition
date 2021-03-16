@@ -32,3 +32,5 @@ work-dpi/
 tb/riscv-isa-sim/
 work-*/*
 install/
+*.mem
+*.bin
