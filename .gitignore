@@ -34,3 +34,5 @@ work-*/*
 install/
 *.mem
 *.bin
+*.rpt
+sw/app
