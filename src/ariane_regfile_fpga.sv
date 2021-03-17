@@ -98,7 +98,7 @@ module ariane_regfile #(
   logic [NR_READ_PORTS-1:0] [DATA_WIDTH-1:0] mem_read [NR_WRITE_PORTS];
   for (genvar j=0; j<NR_WRITE_PORTS; j++) begin : regfile_ram_block
     always_ff @(posedge clk_i) begin
-      if (we_i[j]) begin
+      if (we_i[j] && ~waddr_i[j] != 0) begin
         mem[j][waddr_i[j]] <= wdata_i[j];
       end
     end
@@ -112,7 +112,7 @@ module ariane_regfile #(
   for (genvar k = 0; k < NR_READ_PORTS; k++) begin : regfile_read_port
     assign block_addr[k] = mem_block_sel_q[raddr_i[k]];
     assign rdata_o[k] =
-        (ZERO_REG_ZERO && raddr_i[k] == '0 ) ? '0 : mem_read[block_addr[k]][raddr_i[k]];
+        (ZERO_REG_ZERO && raddr_i[k] == '0 ) ? '0 : mem_read[block_addr[k]][k];
   end
 
 endmodule
