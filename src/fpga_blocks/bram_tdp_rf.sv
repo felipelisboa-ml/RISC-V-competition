@@ -1,4 +1,4 @@
-// True Dual Port (TDP) in read first (RF) mode with one clock
+// True Dual Port (TDP) in read first (RF) mode
 
 module bram_tdp_rf #(
     parameter int unsigned DATA_WIDTH = 32,
@@ -36,12 +36,16 @@ module bram_tdp_rf #(
         end
     end
 
+`ifndef SYNTHESIS
+    // Initialize ram to remove warnings on simulation
     initial
     begin
         for(int i = 0; i < DATA_WIDTH; i++) begin
-        for(int j = 0; j < NUM_WORDS; j++) begin
-            ram[i][j] = $random();
-        end
+            for(int j = 0; j < NUM_WORDS; j++) begin
+                ram[i][j] = $random();
+            end
         end
     end
+`endif
+
 endmodule

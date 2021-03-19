@@ -13,8 +13,8 @@ module ariane_regfile_bram #(
   output logic [1:0][DATA_WIDTH-1:0]        rdata_o,
   // write port
   input  logic [1:0][$clog2(NUM_WORDS)-1:0]  waddr_i,
-  input  logic [1:0][DATA_WIDTH-1:0]        wdata_i,
-  input  logic [1:0]                        we_i
+  input  logic [1:0][DATA_WIDTH-1:0]         wdata_i,
+  input  logic [1:0]                         we_i
 );
 
     localparam int unsigned NR_RW_PORTS  = 2;
@@ -48,9 +48,9 @@ module ariane_regfile_bram #(
     end
 
     logic [NR_RW_PORTS-1:0] rd_data_loc, rd_data_loc_q, wr_data_loc;
-    logic [1:0] rd_data_port, wr_data_port;
-    logic [1:0] rd_data_port_q;
-    logic [1:0][$clog2(NUM_WORDS)-1:0]  raddr_q;
+    logic [NR_RW_PORTS-1:0] rd_data_port, wr_data_port;
+    logic [NR_RW_PORTS-1:0] rd_data_port_q;
+    logic [NR_RW_PORTS-1:0] rzero_q;
 
     for(genvar i = 0; i < NR_RW_PORTS; i++) begin : assign_data_loc
         assign rd_data_loc[i] = data_location[raddr_i[i]];
@@ -58,11 +58,11 @@ module ariane_regfile_bram #(
 
     always_comb begin
         for(integer i = 0; i < NR_RW_PORTS; i++) begin 
-            mem_we[rd_data_loc[i]][rd_data_port[i]]    = 1'b0;
+            mem_we[rd_data_loc[i]][rd_data_port[i]]      = 1'b0;
             mem_addr[rd_data_loc[i]][rd_data_port[i]]    = raddr_i[i];
 
             rdata_o[i] =
-                (ZERO_REG_ZERO && raddr_q[i] == '0 ) ? '0 : mem_data_o[rd_data_loc_q[i]][rd_data_port_q[i]];
+                (ZERO_REG_ZERO && rzero_q[i] ) ? '0 : mem_data_o[rd_data_loc_q[i]][rd_data_port_q[i]];
 
             mem_we    [wr_data_loc[i]][wr_data_port[i]] = we_i[i];
             mem_addr  [wr_data_loc[i]][wr_data_port[i]] = waddr_i[i];
@@ -102,16 +102,17 @@ module ariane_regfile_bram #(
             data_location <= '0;
             rd_data_port_q <= '0;
             rd_data_loc_q  <= '0;
-            raddr_q <= '0;
+            rzero_q <= '0;
         end else begin
             rd_data_port_q <= rd_data_port;
             rd_data_loc_q  <= rd_data_loc;
-            raddr_q <= raddr_i;
-            if(we_i[0])
-                data_location[waddr_i[0]] <= wr_data_loc[0];
 
-            if(we_i[1])
-                data_location[waddr_i[1]] <= wr_data_loc[1];
+            for(int i = 0; i < NR_RW_PORTS; i++) begin
+                rzero_q[i] <= ~(|raddr_i[i]);
+
+                if(we_i[i])
+                    data_location[waddr_i[i]] <= wr_data_loc[i];
+            end
         end
     end
 

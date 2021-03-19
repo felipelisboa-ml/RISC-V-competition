@@ -88,10 +88,6 @@ module ariane import ariane_pkg::*; #(
   // ISSUE <-> EX
   // --------------
 
-
-  logic [riscv::VLEN-1:0] rs1_forwarding_id_ex; // unregistered version of fu_data_o.operanda
-  logic [riscv::VLEN-1:0] rs2_forwarding_id_ex; // unregistered version of fu_data_o.operandb
-
   fu_data_t                 fu_data_id_ex;
   logic [riscv::VLEN-1:0]   pc_id_ex;
   logic                     is_compressed_instr_id_ex;
@@ -312,8 +308,6 @@ module ariane import ariane_pkg::*; #(
     .is_ctrl_flow_i             ( is_ctrl_fow_id_issue         ),
     .decoded_instr_ack_o        ( issue_instr_issue_id         ),
     // Functional Units
-    .rs1_forwarding_o           ( rs1_forwarding_id_ex         ),
-    .rs2_forwarding_o           ( rs2_forwarding_id_ex         ),
     .fu_data_o                  ( fu_data_id_ex                ),
     .pc_o                       ( pc_id_ex                     ),
     .is_compressed_instr_o      ( is_compressed_instr_id_ex    ),
@@ -364,8 +358,6 @@ module ariane import ariane_pkg::*; #(
     .rst_ni                 ( rst_ni                      ),
     .debug_mode_i           ( debug_mode                  ),
     .flush_i                ( flush_ctrl_ex               ),
-    .rs1_forwarding_i       ( rs1_forwarding_id_ex        ),
-    .rs2_forwarding_i       ( rs2_forwarding_id_ex        ),
     .fu_data_i              ( fu_data_id_ex               ),
     .pc_i                   ( pc_id_ex                    ),
     .is_compressed_instr_i  ( is_compressed_instr_id_ex   ),
