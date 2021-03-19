@@ -96,9 +96,6 @@ module issue_read_operands import ariane_pkg::*; #(
 
     // forwarding signals
     logic forward_rs1, forward_rs2, forward_rs3;
-    logic [0:1] fwd_n, fwd_q;
-
-    logic [1:0][riscv::XLEN-1:0] rdata;
 
     // original instruction stored in tval
     riscv::instruction_t orig_instr;
@@ -109,8 +106,8 @@ module issue_read_operands import ariane_pkg::*; #(
     assign rs1_forwarding_o = operand_a_n[riscv::VLEN-1:0];  //forwarding or unregistered rs1 value
     assign rs2_forwarding_o = operand_b_n[riscv::VLEN-1:0];  //forwarding or unregistered rs2 value
 
-    assign fu_data_o.operand_a = (fwd_q[0]) ? operand_a_q : rdata[0];
-    assign fu_data_o.operand_b = (fwd_q[1]) ? operand_b_q : rdata[1];
+    assign fu_data_o.operand_a = operand_a_q;
+    assign fu_data_o.operand_b = operand_b_q;
     assign fu_data_o.fu        = fu_q;
     assign fu_data_o.operator  = operator_q;
     assign fu_data_o.trans_id  = trans_id_q;
@@ -207,17 +204,13 @@ module issue_read_operands import ariane_pkg::*; #(
         trans_id_n = issue_instr_i.trans_id;
         fu_n       = issue_instr_i.fu;
         operator_n = issue_instr_i.op;
-        fwd_n = '0;
-
         // or should we forward
         if (forward_rs1) begin
             operand_a_n  = rs1_i;
-            fwd_n[0] = 1'b1;
         end
 
         if (forward_rs2) begin
             operand_b_n  = rs2_i;
-            fwd_n[1] = 1'b1;
         end
 
         if (forward_rs3) begin
@@ -227,20 +220,17 @@ module issue_read_operands import ariane_pkg::*; #(
         // use the PC as operand a
         if (issue_instr_i.use_pc) begin
             operand_a_n = {{riscv::XLEN-riscv::VLEN{issue_instr_i.pc[riscv::VLEN-1]}}, issue_instr_i.pc};
-            fwd_n[0] = 1'b1;
         end
 
         // use the zimm as operand a
         if (issue_instr_i.use_zimm) begin
             // zero extend operand a
             operand_a_n = {{riscv::XLEN-5{1'b0}}, issue_instr_i.rs1[4:0]};
-            fwd_n[0] = 1'b1;
         end
         // or is it an immediate (including PC), this is not the case for a store and control flow instructions
         // also make sure operand B is not already used as an FP operand
         if (issue_instr_i.use_imm && (issue_instr_i.fu != STORE) && (issue_instr_i.fu != CTRL_FLOW) && !is_rs2_fpr(issue_instr_i.op)) begin
             operand_b_n = issue_instr_i.result;
-            fwd_n[1] = 1'b1;
         end
     end
 
@@ -356,6 +346,7 @@ module issue_read_operands import ariane_pkg::*; #(
     // ----------------------
     // Integer Register File
     // ----------------------
+    logic [1:0][riscv::XLEN-1:0] rdata;
     logic [1:0][4:0]  raddr_pack;
 
     // pack signals
@@ -369,9 +360,10 @@ module issue_read_operands import ariane_pkg::*; #(
         assign we_pack[i]    = we_gpr_i[i];
     end
 
-    ariane_regfile_bram #(
+    ariane_regfile #(
         .DATA_WIDTH     ( riscv::XLEN     ),
-        .NUM_WORDS      ( 32              ),
+        .NR_READ_PORTS  ( 2               ),
+        .NR_WRITE_PORTS ( NR_COMMIT_PORTS ),
         .ZERO_REG_ZERO  ( 1               )
     ) i_ariane_regfile (
         .test_en_i ( 1'b0       ),
@@ -418,8 +410,8 @@ module issue_read_operands import ariane_pkg::*; #(
         end
     endgenerate
 
-    assign operand_a_regfile = is_rs1_fpr(issue_instr_i.op) ? {{riscv::XLEN-FLEN{1'b0}}, fprdata[0]} : '0;
-    assign operand_b_regfile = is_rs2_fpr(issue_instr_i.op) ? {{riscv::XLEN-FLEN{1'b0}}, fprdata[1]} : '0;
+    assign operand_a_regfile = is_rs1_fpr(issue_instr_i.op) ? {{riscv::XLEN-FLEN{1'b0}}, fprdata[0]} : rdata[0];
+    assign operand_b_regfile = is_rs2_fpr(issue_instr_i.op) ? {{riscv::XLEN-FLEN{1'b0}}, fprdata[1]} : rdata[1];
     assign operand_c_regfile = fprdata[2];
 
     // ----------------------
@@ -436,7 +428,6 @@ module issue_read_operands import ariane_pkg::*; #(
             pc_o                  <= '0;
             is_compressed_instr_o <= 1'b0;
             branch_predict_o      <= {cf_t'(0), {riscv::VLEN{1'b0}}};
-            fwd_q <= '0;
         end else begin
             operand_a_q           <= operand_a_n;
             operand_b_q           <= operand_b_n;
@@ -447,7 +438,6 @@ module issue_read_operands import ariane_pkg::*; #(
             pc_o                  <= issue_instr_i.pc;
             is_compressed_instr_o <= issue_instr_i.is_compressed;
             branch_predict_o      <= issue_instr_i.bp;
-            fwd_q <= fwd_n;
         end
     end
 
