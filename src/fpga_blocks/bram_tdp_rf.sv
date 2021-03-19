@@ -42,7 +42,7 @@ module bram_tdp_rf #(
     begin
         for(int i = 0; i < DATA_WIDTH; i++) begin
             for(int j = 0; j < NUM_WORDS; j++) begin
-                ram[i][j] = $random();
+                ram[i][j] = '0;
             end
         end
     end

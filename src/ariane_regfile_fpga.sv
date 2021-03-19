@@ -115,14 +115,16 @@ module ariane_regfile #(
         (ZERO_REG_ZERO && raddr_i[k] == '0 ) ? '0 : mem_read[block_addr[k]][k];
   end
 
+`ifndef SYNTHESIS
   // random initialization of the memory to suppress assert warnings on Questa.
   initial
   begin
     for(int i = 0; i < NR_WRITE_PORTS; i++) begin
       for(int j = 0; j < NUM_WORDS; j++) begin
-        mem[i][j] = $random();
+        mem[i][j] = '0;
       end
     end
   end
+`endif
 
 endmodule
