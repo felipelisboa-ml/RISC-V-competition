@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Thales.
+\// Copyright (c) 2020 Thales.
 // Copyright 2018 ETH Zurich and University of Bologna.
 // Copyright and related rights are licensed under the Solderpad Hardware
 // License, Version 0.51 (the "License"); you may not use this file except in
@@ -42,6 +42,7 @@ module ariane_tb;
 
     int exit_status = `EXIT_ERROR;
 
+    //localparam int unsigned CLOCK_PERIOD = 20ns; //50MHz as for the Zybo kit
     localparam int unsigned CLOCK_PERIOD = 40ns; //25MHz as for the Zybo kit
 
     localparam NUM_WORDS = 2**18;
