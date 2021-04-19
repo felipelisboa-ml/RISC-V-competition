@@ -61,8 +61,34 @@ module fifo_v3 #(
         assign data_i_tmp[k] = data_i[(k+1)*DATA_SPLIT-1:(k)*DATA_SPLIT];
     end
 
-    //do I still need the logic for holding reset & enable ?
-    
+    //---------------- NOT MY CODE --------------------
+    wire wResetQ;
+    SRL16E #( .INIT( 16'hFF00 ) ) mReset
+    ( .CLK ( WrClk ),
+    .CE  ( 1'b1 ),
+    .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
+    .D   ( 1'b0 ),
+    .Q   ( wResetQ ) );
+
+    reg rInitReset  = 1'b1;
+    wire wReset     = rInitEnable;
+    always_ff @( posedge WrClk )
+        rInitEnable   <= wResetQ;
+
+    wire wEnableN;
+    SRL16E #( .INIT( 16'hFFF0 ) ) mEnable
+    ( .CLK ( WrClk ),
+    .CE  ( 1'b1 ),
+    .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
+    .D   ( 1'b0 ),
+    .Q   ( wEnableN ) );
+
+    reg rInitEnable  = 1'b0;
+    wire wEnable     = rInitEnable;
+    always_ff @( posedge WrClk )
+        rInitEnable    <= ~ wEnableN;
+    //--------------------------------------------------
+
     for(genvar k=0; k < NUM_FIFOS; k++) begin : gen_fifos
         FIFO_SYNC_MACRO #(
             .DEVICE("7SERIES"), // Target Device: "7SERIES"
@@ -83,9 +109,9 @@ module fifo_v3 #(
             .WRERR(wr_error_tmp[k]), // 1-bit output write error
             .CLK(clk_i), // 1-bit input clock
             .DI(data_i_tmp[k]), // Input data, width defined by DATA_WIDTH parameter
-            .RDEN(pop_i), // 1-bit input read enable
-            .RST(rst_ni || flush_q), // 1-bit input reset
-            .WREN(push_i) // 1-bit input write enable
+            .RDEN(pop_i&&wEnable), // 1-bit input read enable
+            .RST(wReset), // 1-bit input reset
+            .WREN(push_i&&wEnable) // 1-bit input write enable
     );
     end
 
