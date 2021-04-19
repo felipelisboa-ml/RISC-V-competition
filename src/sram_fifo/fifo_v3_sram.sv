@@ -33,7 +33,7 @@ module fifo_v3 #(
     input  logic  pop_i             // pop head from queue
 );
 
-    localparam int unsigned DATA_SPLIT = 16;
+    localparam int unsigned DATA_SPLIT = (DATA_WIDTH >= 32) ? 32 : DATA_WIDTH;
     localparam int unsigned NUM_FIFOS = (DATA_WIDTH%DATA_SPLIT) + 1 ;
  
     //not used
@@ -111,7 +111,7 @@ module fifo_v3 #(
             .CLK(clk_i), // 1-bit input clock
             .DI(data_i_tmp[k]), // Input data, width defined by DATA_WIDTH parameter
             .RDEN(pop_i&&wEnable), // 1-bit input read enable
-            .RST(wReset), // 1-bit input reset
+            .RST(wReset || flush_q), // 1-bit input reset
             .WREN(push_i&&wEnable) // 1-bit input write enable
     );
     end
