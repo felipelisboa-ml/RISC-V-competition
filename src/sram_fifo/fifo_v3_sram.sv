@@ -55,9 +55,9 @@ module fifo_v3 #(
         .D    (rst_ni),
         .Q    (wResetQ)
     );
-    //Toda vez que rolar um clock o reset acontece com 4 ciclos de delay
+    
     always_ff @(posedge clk_i) begin : hold_reset
-          wReset <= wResetQ;
+          wReset <= wResetQ || flush_i;
     end
 
     logic wEnable = 0;
