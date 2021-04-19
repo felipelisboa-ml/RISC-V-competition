@@ -39,7 +39,7 @@ module fifo_v3 #(
     logic [NUM_FIFOS-1:0] rd_error_tmp;
     logic [NUM_FIFOS-1:0] wr_error_tmp;
 
-    localparam int unsigned DATA_SPLIT = 32;
+    localparam int unsigned DATA_SPLIT = (DATA_WIDTH >= 32) ? 32 : DATA_WIDTH;
     localparam int unsigned NUM_FIFOS = (DATA_WIDTH%DATA_SPLIT) + 1 ;
 
     //cut the data into pieces of size DATA_SPLIT
@@ -114,20 +114,18 @@ module fifo_v3 #(
             .WREN(push_i&&wEnable) // 1-bit input write enable
     );
     end
-
+    
+    logic [ADDR_DEPTH-1:0] rdcount;
+    logic [ADDR_DEPTH-1:0] wrcount;
     //workaround because there will not be more than 2 fifos
-    always_comb begin : final
-        if(NUM_FIFOS == 2)) begin
-            usage_o = {rdcount_tmp[0],rdcount_tmp[1]} - {wrcount_tmp[0],wrcount_tmp[1]};
-            full_o = full_tmp[0] && full_tmp[1];
-            empty_o = empty_tmp[0] && empty_tmp[1];
-            data_o = {data_o_tmp[0],data_o_tmp[1]};
-        end else begin
-            usage_o = rdcount_tmp[0] - wrcount_tmp[0];
-            full_o = full_tmp[0];
-            empty_o = empty_tmp[0];
-            data_o = data_o_tmp[0];
-        end     
+    always_comb begin : assign_output
+        for(genvar k=0; k<NUM_FIFOS; k++) begin
+            assign rdcount = {rdcount_tmp[k],rdcount};
+            assign wrcount = {wrcount_tmp[k],wrcount};
+            assign usage_o = wrcount - rdcount;
+            assign full_o &= full_tmp[k];
+            assign empty_o &= empty_tmp[k];
+        end    
     end
 
 endmodule // fifo_v3
