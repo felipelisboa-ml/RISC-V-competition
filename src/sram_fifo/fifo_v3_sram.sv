@@ -33,15 +33,15 @@ module fifo_v3 #(
     input  logic  pop_i             // pop head from queue
 );
 
+    localparam int unsigned DATA_SPLIT = 16;
+    localparam int unsigned NUM_FIFOS = (DATA_WIDTH%DATA_SPLIT) + 1 ;
+ 
     //not used
     logic [NUM_FIFOS-1:0] almost_empty_tmp;
     logic [NUM_FIFOS-1:0] almost_full_tmp;
     logic [NUM_FIFOS-1:0] rd_error_tmp;
     logic [NUM_FIFOS-1:0] wr_error_tmp;
-
-    localparam int unsigned DATA_SPLIT = 32;
-    localparam int unsigned NUM_FIFOS = (DATA_WIDTH%DATA_SPLIT) + 1 ;
-
+    
     //cut the data into pieces of size DATA_SPLIT
     logic [NUM_FIFOS-1:0][DATA_SPLIT-1:0] data_i_tmp;
     logic [NUM_FIFOS-1:0][DATA_SPLIT-1:0] data_o_tmp;
@@ -62,30 +62,31 @@ module fifo_v3 #(
     end
 
     //---------------- NOT MY CODE --------------------
-    wire wResetQ;
+    logic wResetQ;
     SRL16E #( .INIT( 16'hFF00 ) ) mReset
-    ( .CLK ( WrClk ),
+    ( .CLK ( clk_i ),
     .CE  ( 1'b1 ),
     .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
     .D   ( 1'b0 ),
     .Q   ( wResetQ ) );
 
     reg rInitReset  = 1'b1;
-    wire wReset     = rInitEnable;
-    always_ff @( posedge WrClk )
+    reg rInitEnable  = 1'b0;
+   
+    logic wReset     = rInitEnable;
+    always_ff @( posedge clk_i )
         rInitEnable   <= wResetQ;
 
-    wire wEnableN;
+    logic wEnableN;
     SRL16E #( .INIT( 16'hFFF0 ) ) mEnable
-    ( .CLK ( WrClk ),
+    ( .CLK ( clk_i ),
     .CE  ( 1'b1 ),
     .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
     .D   ( 1'b0 ),
     .Q   ( wEnableN ) );
-
-    reg rInitEnable  = 1'b0;
-    wire wEnable     = rInitEnable;
-    always_ff @( posedge WrClk )
+    
+    logic wEnable     = rInitEnable;
+    always_ff @( posedge clk_i )
         rInitEnable    <= ~ wEnableN;
     //--------------------------------------------------
 
@@ -116,8 +117,8 @@ module fifo_v3 #(
     end
 
     //workaround because there will not be more than 2 fifos
-    always_comb begin : final
-        if(NUM_FIFOS == 2)) begin
+    always_comb begin : output_assign
+        if(NUM_FIFOS == 2) begin
             usage_o = {rdcount_tmp[0],rdcount_tmp[1]} - {wrcount_tmp[0],wrcount_tmp[1]};
             full_o = full_tmp[0] && full_tmp[1];
             empty_o = empty_tmp[0] && empty_tmp[1];
