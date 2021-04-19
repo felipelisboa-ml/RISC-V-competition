@@ -118,15 +118,14 @@ module fifo_v3 #(
     
     logic [ADDR_DEPTH-1:0] rdcount;
     logic [ADDR_DEPTH-1:0] wrcount;
+
     //workaround because there will not be more than 2 fifos
-    always_comb begin : assign_output
-        for(genvar k=0; k<NUM_FIFOS; k++) begin
-            assign rdcount = {rdcount_tmp[k],rdcount};
-            assign wrcount = {wrcount_tmp[k],wrcount};
-            assign usage_o = wrcount - rdcount;
-            assign full_o &= full_tmp[k];
-            assign empty_o &= empty_tmp[k];
-        end    
-    end
+    for(genvar k=0; k<NUM_FIFOS; k++) begin : generate_output
+        assign rdcount = {rdcount_tmp[k],rdcount};
+        assign wrcount = {wrcount_tmp[k],wrcount};
+        assign usage_o = wrcount - rdcount;
+        assign full_o &= full_tmp[k];
+        assign empty_o &= empty_tmp[k];
+    end    
 
 endmodule // fifo_v3
