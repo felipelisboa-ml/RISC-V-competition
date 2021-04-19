@@ -80,7 +80,7 @@ module fifo_v3 #(
         .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
         .DATA_WIDTH(DATA_WIDTH), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
         .DO_REG(0), // Optional output register (0 or 1)
-        .FIFO_SIZE ("18Kb") // Target BRAM: "18Kb" or "36Kb"
+        .FIFO_SIZE ("36Kb") // Target BRAM: "18Kb" or "36Kb"
     ) FIFO_SYNC_MACRO_inst (
         .ALMOSTEMPTY(almost_empty), // 1-bit output almost empty
         .ALMOSTFULL(almost_full), // 1-bit output almost full
