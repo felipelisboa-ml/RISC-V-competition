@@ -78,7 +78,7 @@ module fifo_v3 #(
         .DEVICE("7SERIES"), // Target Device: "7SERIES"
         .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
         .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
-        .DATA_WIDTH(36), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+        .DATA_WIDTH(DATA_WIDTH), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
         .DO_REG(0), // Optional output register (0 or 1)
         .FIFO_SIZE ("18Kb") // Target BRAM: "18Kb" or "36Kb"
     ) FIFO_SYNC_MACRO_inst (
