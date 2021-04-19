@@ -33,71 +33,75 @@ module fifo_v3 #(
     input  logic  pop_i             // pop head from queue
 );
 
-    // 512 entries by 36 bits (18Kb FIFO)
-    logic almost_empty;
-    logic almost_full;
-    logic read_error;
-    logic write_error;
+    //not used
+    logic [NUM_FIFOS-1:0] almost_empty_tmp;
+    logic [NUM_FIFOS-1:0] almost_full_tmp;
+    logic [NUM_FIFOS-1:0] rd_error_tmp;
+    logic [NUM_FIFOS-1:0] wr_error_tmp;
 
-    // We need 9 bits for pointers, since the depth is 512
-    logic [8:0] rd_count;
-    logic [8:0] wr_count;
+    localparam int unsigned DATA_SPLIT = 32;
+    localparam int unsigned NUM_FIFOS = (DATA_WIDTH%DATA_SPLIT) + 1 ;
 
-    logic wReset = 1'b1;
-    logic wResetQ;
+    //cut the data into pieces of size DATA_SPLIT
+    logic [NUM_FIFOS-1:0][DATA_SPLIT-1:0] data_i_tmp;
+    logic [NUM_FIFOS-1:0][DATA_SPLIT-1:0] data_o_tmp;
 
-    SRL16E #(
-        .INIT(16'hFF00)
-    ) mReset(
-        .CLK  (clk_i),
-        .CE   (1'b1),
-        .A0   (1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1),
-        .D    (rst_ni),
-        .Q    (wResetQ)
-    );
+    logic [NUM_FIFOS-1:0] empty_tmp;
+    logic [NUM_FIFOS-1:0] full_tmp;
+
+    logic [NUM_FIFOS-1:0][ADDR_DEPTH-1:0] rdcount_tmp;
+    logic [NUM_FIFOS-1:0][ADDR_DEPTH-1:0] wrcount_tmp;
     
-    always_ff @(posedge clk_i) begin : hold_reset
-          wReset <= wResetQ || flush_i;
+    logic flush_q;
+    always_ff @( clk_i ) begin : flush_register
+        flush_q <= flush_i;
     end
 
-    logic wEnable = 0;
-    logic wEnableQ;
-    SRL16E #(
-        .INIT(16'hFFF0)
-    ) mEnable(
-      .CLK ( clk_i ),
-      .CE  ( 1'b1 ),
-      .A0  ( 1'b1 ), .A1( 1'b1 ), .A2( 1'b1 ), .A3( 1'b1 ),
-      .D   ( 1'b0 ),
-      .Q   ( wEnableQ ) );
-    always @( posedge clk_i ) begin : hold_enable
-        wEnable    <= ~ wEnableQ;
+    for (genvar k=0; k < NUM_FIFOS; k++) begin
+        assign data_i_tmp[k] = data_i[(k+1)*DATA_SPLIT-1:(k)*DATA_SPLIT];
     end
 
-    FIFO_SYNC_MACRO #(
-        .DEVICE("7SERIES"), // Target Device: "7SERIES"
-        .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
-        .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
-        .DATA_WIDTH(DATA_WIDTH), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
-        .DO_REG(0), // Optional output register (0 or 1)
-        .FIFO_SIZE ("36Kb") // Target BRAM: "18Kb" or "36Kb"
-    ) FIFO_SYNC_MACRO_inst (
-        .ALMOSTEMPTY(almost_empty), // 1-bit output almost empty
-        .ALMOSTFULL(almost_full), // 1-bit output almost full
-        .DO(data_o), // Output data, width defined by DATA_WIDTH parameter
-        .EMPTY(empty_o), // 1-bit output empty
-        .FULL(full_o), // 1-bit output full
-        .RDCOUNT(rd_count), // Output read count, width determined by FIfor depth
-        .RDERR(read_error), // 1-bit output read error
-        .WRCOUNT(wr_count), // Output write count, width determined by FIfor depth
-        .WRERR(write_error), // 1-bit output write error
-        .CLK(clk_i), // 1-bit input clock
-        .DI(data_i), // Input data, width defined by DATA_WIDTH parameter
-        .RDEN(pop_i&&wEnable), // 1-bit input read enable
-        .RST(wReset), // 1-bit input reset
-        .WREN(push_i&&wEnable) // 1-bit input write enable
+    //do I still need the logic for holding reset & enable ?
+    
+    for(genvar k=0; k < NUM_FIFOS; k++) begin : gen_fifos
+        FIFO_SYNC_MACRO #(
+            .DEVICE("7SERIES"), // Target Device: "7SERIES"
+            .ALMOST_EMPTY_OFFSET(9'h080), // Sets the almost empty threshold
+            .ALMOST_FULL_OFFSET(9'h080), // Sets almost full threshold
+            .DATA_WIDTH(DATA_SPLIT), // Valid values are 1-72 (37-72 only valid when FIFO_SIZE="36Kb")
+            .DO_REG(0), // Optional output register (0 or 1)
+            .FIFO_SIZE ("18Kb") // Target BRAM: "18Kb" or "36Kb"
+        ) FIFO_SYNC_MACRO_inst (
+            .ALMOSTEMPTY(almost_empty_tmp[k]), // 1-bit output almost empty
+            .ALMOSTFULL(almost_full_tmp[k]), // 1-bit output almost full
+            .DO(data_o_tmp[k]), // Output data, width defined by DATA_WIDTH parameter
+            .EMPTY(empty_tmp[k]), // 1-bit output empty
+            .FULL(full_tmp[k]), // 1-bit output full
+            .RDCOUNT(rdcount_tmp[k]), // Output read count, width determined by FIfor depth
+            .RDERR(rd_error_tmp[k]), // 1-bit output read error
+            .WRCOUNT(wrcount_tmp[k]), // Output write count, width determined by FIfor depth
+            .WRERR(wr_error_tmp[k]), // 1-bit output write error
+            .CLK(clk_i), // 1-bit input clock
+            .DI(data_i_tmp[k]), // Input data, width defined by DATA_WIDTH parameter
+            .RDEN(pop_i), // 1-bit input read enable
+            .RST(rst_ni || flush_q), // 1-bit input reset
+            .WREN(push_i) // 1-bit input write enable
     );
+    end
 
-    assign usage_o = rd_count[8:0] - wr_count[8:0];
+    //workaround because there will not be more than 2 fifos
+    always_comb begin : final
+        if(NUM_FIFOS == 2)) begin
+            usage_o = {rdcount_tmp[0],rdcount_tmp[1]} - {wrcount_tmp[0],wrcount_tmp[1]};
+            full_o = full_tmp[0] && full_tmp[1];
+            empty_o = empty_tmp[0] && empty_tmp[1];
+            data_o = {data_o_tmp[0],data_o_tmp[1]};
+        end else begin
+            usage_o = rdcount_tmp[0] - wrcount_tmp[0];
+            full_o = full_tmp[0];
+            empty_o = empty_tmp[0];
+            data_o = data_o_tmp[0];
+        end     
+    end
 
 endmodule // fifo_v3
