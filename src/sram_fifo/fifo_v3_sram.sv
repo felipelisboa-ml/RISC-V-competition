@@ -70,8 +70,8 @@ module fifo_v3 #(
     .D   ( 1'b0 ),
     .Q   ( wResetQ ) );
 
-    reg rInitReset  = 1'b1;
-    reg rInitEnable  = 1'b0;
+    logic rInitReset  = 1'b1;
+    logic rInitEnable  = 1'b0;
    
     logic wReset     = rInitEnable;
     always_ff @( posedge clk_i )
