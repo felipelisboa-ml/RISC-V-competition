@@ -115,22 +115,10 @@ module fifo_v3 #(
             .WREN(push_i&&wEnable) // 1-bit input write enable
     );
     end
-    
-    logic [ADDR_DEPTH-1:0] rdcount;
-    logic [ADDR_DEPTH-1:0] wrcount;
-    logic full_tmp_out;
-    logic empty_tmp_out;
 
-    //workaround because there will not be more than 2 fifos
-    for(genvar k=1; k<NUM_FIFOS; k++) begin : generate_output
-        assign rdcount = {rdcount_tmp[k],rdcount};
-        assign wrcount = {wrcount_tmp[k],wrcount};
-        assign full_tmp_out = {full_tmp[k], full_tmp_out};
-        assign empty_tmp_out = {empty_tmp[k],empty_tmp_out};
-    end  
-
-    assign usage_o = wrcount - rdcount;
-    assign full_o = &full_tmp_out; 
-    assign empty_o = &empty_tmp_out;
+    //It's enough to look at one FIFO for constructing the module output, since all FIFOS operate similarly
+    assign usage_o = wrcount_tmp[0] - rdcount_tmp[0];
+    assign full_o = full_tmp[0];
+    assign empty_o = empty_tmp[0];
 
 endmodule // fifo_v3
