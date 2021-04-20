@@ -116,10 +116,10 @@ module fifo_v3 #(
     );
     end
     
-    logic [ADDR_DEPTH-1:0] rdcount = rdcount_tmp[0];
-    logic [ADDR_DEPTH-1:0] wrcount = wrcount_tmp[0];
-    logic full_tmp_out = full_tmp[0];
-    logic empty_tmp_out = empty_tmp[0];
+    logic [ADDR_DEPTH-1:0] rdcount;
+    logic [ADDR_DEPTH-1:0] wrcount;
+    logic full_tmp_out;
+    logic empty_tmp_out;
 
     //workaround because there will not be more than 2 fifos
     for(genvar k=1; k<NUM_FIFOS; k++) begin : generate_output
