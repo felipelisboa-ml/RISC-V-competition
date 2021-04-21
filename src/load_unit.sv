@@ -58,9 +58,6 @@ module load_unit import ariane_pkg::*; #(
     } load_data_d, load_data_q, in_data;
 
     logic page_offset_matches_q;
-    always_ff @( clk_i ) begin : page_offset_flop
-        page_offset_matches_q <= page_offset_matches_i;
-    end
 
     // page offset is defined as the lower 12 bits, feed through for address checker
     assign page_offset_o = lsu_ctrl_i.vaddr[11:0];
@@ -365,6 +362,10 @@ module load_unit import ariane_pkg::*; #(
             ariane_pkg::LB, ariane_pkg::LBU, ariane_pkg::FLB:    result_o = {{riscv::XLEN-32+24{sign_bit}}, shifted_data[7:0]};
             default:    result_o = shifted_data[riscv::XLEN-1:0];
         endcase
+    end
+
+    always_ff @( clk_i ) begin : page_offset_flop
+        page_offset_matches_q <= page_offset_matches_i;
     end
 
     always_ff @(posedge clk_i or negedge rst_ni) begin : p_regs
