@@ -161,7 +161,7 @@ module load_unit import ariane_pkg::*; #(
                 if (dcache_wbuffer_not_ni_i) state_d = WAIT_TRANSLATION;
             end
 
-            WAIT_TRANSLATION: begin
+            WAIT_TRANSLATION: g
                 translation_req_o = 1'b1;
                 // we've got a hit and we can continue with the request process
                 if (dtlb_hit_i)
@@ -181,7 +181,7 @@ module load_unit import ariane_pkg::*; #(
                         pop_ld_o = 1'b1;
                     // translation valid but this is to NC and the WB is not yet empty.
                     end else if (dtlb_hit_i && stall_ni) begin
-                        state_d = ABORT_TRANSACTION_NI;
+                        state_d = ABORT_TRANSACTION_NI;it 
                     end else begin
                     // should we not have hit on the TLB abort this transaction an retry later
                         state_d = ABORT_TRANSACTION;
@@ -364,8 +364,12 @@ module load_unit import ariane_pkg::*; #(
         endcase
     end
 
-    always_ff @( clk_i ) begin : page_offset_flop
-        page_offset_matches_q <= page_offset_matches_i;
+    always_ff @(posedge clk_i or negedge rst_ni ) begin : page_offset_flop
+        if(~rst_ni) begin
+            page_offset_matches_q <= '0;
+        end else begin
+            page_offset_matches_q <= page_offset_matches_i;
+        end  
     end
 
     always_ff @(posedge clk_i or negedge rst_ni) begin : p_regs
