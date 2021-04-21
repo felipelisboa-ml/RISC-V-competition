@@ -161,7 +161,7 @@ module load_unit import ariane_pkg::*; #(
                 if (dcache_wbuffer_not_ni_i) state_d = WAIT_TRANSLATION;
             end
 
-            WAIT_TRANSLATION: g
+            WAIT_TRANSLATION: begin
                 translation_req_o = 1'b1;
                 // we've got a hit and we can continue with the request process
                 if (dtlb_hit_i)
