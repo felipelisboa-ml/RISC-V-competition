@@ -181,7 +181,7 @@ module load_unit import ariane_pkg::*; #(
                         pop_ld_o = 1'b1;
                     // translation valid but this is to NC and the WB is not yet empty.
                     end else if (dtlb_hit_i && stall_ni) begin
-                        state_d = ABORT_TRANSACTION_NI;it 
+                        state_d = ABORT_TRANSACTION_NI;
                     end else begin
                     // should we not have hit on the TLB abort this transaction an retry later
                         state_d = ABORT_TRANSACTION;
