@@ -57,6 +57,11 @@ module load_unit import ariane_pkg::*; #(
         fu_op                     operator;
     } load_data_d, load_data_q, in_data;
 
+    logic page_offset_matches_q;
+    always_ff @( clk_i ) begin : page_offset_flop
+        page_offset_matches_q <= page_offset_matches_i;
+    end
+
     // page offset is defined as the lower 12 bits, feed through for address checker
     assign page_offset_o = lsu_ctrl_i.vaddr[11:0];
     // feed-through the virtual address for VA translation
@@ -110,7 +115,7 @@ module load_unit import ariane_pkg::*; #(
                     // this should ease timing
                     translation_req_o = 1'b1;
                     // check if the page offset matches with a store, if it does then stall and wait
-                    if (!page_offset_matches_i) begin
+                    if (!page_offset_matches_q) begin
                         // make a load request to memory
                         req_port_o.data_req = 1'b1;
                         // we got no data grant so wait for the grant before sending the tag
@@ -138,7 +143,7 @@ module load_unit import ariane_pkg::*; #(
             // wait here for the page offset to not match anymore
             WAIT_PAGE_OFFSET: begin
                 // we make a new request as soon as the page offset does not match anymore
-                if (!page_offset_matches_i) begin
+                if (!page_offset_matches_q) begin
                     state_d = WAIT_GNT;
                 end
             end
@@ -197,7 +202,7 @@ module load_unit import ariane_pkg::*; #(
                     // this should ease timing
                     translation_req_o = 1'b1;
                     // check if the page offset matches with a store, if it does stall and wait
-                    if (!page_offset_matches_i) begin
+                    if (!page_offset_matches_q) begin
                         // make a load request to memory
                         req_port_o.data_req = 1'b1;
                         // we got no data grant so wait for the grant before sending the tag
