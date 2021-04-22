@@ -72,6 +72,8 @@ module serdiv import ariane_pkg::*; #(
   logic lzc_a_no_one, lzc_b_no_one;
   logic div_res_zero_d, div_res_zero_q;
 
+  logic flush_q;
+
 
 /////////////////////////////////////
 // align the input operands
@@ -137,6 +139,9 @@ module serdiv import ariane_pkg::*; #(
   assign add_tmp     = (load_en) ? 0 : op_a_q;
   assign add_out     = (pm_sel)  ? add_tmp + add_mux : add_tmp - $signed(add_mux);
 
+  always_ff @(posedge clk_i) begin : flush_register
+    flush_q <= flush_i;
+  end
 /////////////////////////////////////
 // FSM, counter
 /////////////////////////////////////
@@ -196,7 +201,7 @@ module serdiv import ariane_pkg::*; #(
       default : state_d = IDLE;
     endcase
 
-    if (flush_i) begin
+    if (flush_q) begin
         in_rdy_o   = 1'b0;
         out_vld_o  = 1'b0;
         a_reg_en   = 1'b0;
