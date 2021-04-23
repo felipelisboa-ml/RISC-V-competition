@@ -1,3 +1,17 @@
+# RISCy Business - How we structured our work #
+
+There are 8 branches (excluding master). 
+
+Our final result is the branch **final_lutram**
+
+The branch **final_bram** is an alternative result (though not to be considered our final result).
+
+With the exception of **fifo_mod**, which is a non-finished modification, all other branches are features which were eventually merged into the final branches. We decided to preserve individual branches.
+
+Our raport (pdf format) is inserted here as well.
+
+It has been fun, thanks for the opportunity.
+
 # Getting started
 
 To get more familiar with CVA6 architecture, a partial documentation is available:
