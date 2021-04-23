@@ -30,7 +30,7 @@ sources:
     # Stand-alone source files
     - src/ariane.sv
     - src/serdiv.sv
-    - src/ariane_regfile_ff.sv
+    - src/ariane_regfile_fpga.sv
     - src/amo_buffer.sv
     - src/id_stage.sv
     - src/branch_unit.sv
