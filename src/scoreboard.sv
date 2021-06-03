@@ -182,26 +182,13 @@ module scoreboard #(
     .popcount_o(num_commit)
   );
 
-  wire [BITS_ENTRIES-1:0] issue_cnt_tmp = issue_cnt_q - num_commit + issue_en;
-  wire [BITS_ENTRIES-1:0] commit_pointer_0_tmp = commit_pointer_q[0] + num_commit;
-  wire [BITS_ENTRIES-1:0] issue_pointer_tmp = issue_pointer_q + issue_en;
-
-  for(genvar ii=0; ii < BITS_ENTRIES; ii++) begin : scoreboard_issue_assign
-	assign issue_cnt_n[ii]         = (~flush_i) & issue_cnt_tmp[ii];
-	assign commit_pointer_n[0][ii] = (~flush_i) & commit_pointer_0_tmp[ii];
-	assign issue_pointer_n[ii]     = (~flush_i) & issue_pointer_tmp[ii];
-  end
-
-//  assign issue_cnt_n         = (flush_i) ? '0 : issue_cnt_q         - num_commit + issue_en;
-//  assign commit_pointer_n[0] = (flush_i) ? '0 : commit_pointer_q[0] + num_commit;
-//  assign issue_pointer_n     = (flush_i) ? '0 : issue_pointer_q     + issue_en;
+  assign issue_cnt_n         = (flush_i) ? '0 : issue_cnt_q         - num_commit + issue_en;
+  assign commit_pointer_n[0] = (flush_i) ? '0 : commit_pointer_q[0] + num_commit;
+  assign issue_pointer_n     = (flush_i) ? '0 : issue_pointer_q     + issue_en;
 
   // precompute offsets for commit slots
   for (genvar k=1; k < NR_COMMIT_PORTS; k++) begin : gen_cnt_incr
-    wire [BITS_ENTRIES-1:0] commit_pointer_n_tmp = commit_pointer_0_tmp + unsigned'(k);
-    for(genvar ii=0; ii < BITS_ENTRIES; ii++) begin
-      assign commit_pointer_n[k][ii] = (~flush_i) & commit_pointer_n_tmp[ii];
-    end
+    assign commit_pointer_n[k] = (flush_i) ? '0 : commit_pointer_n[0] + unsigned'(k);
   end
 
   // -------------------
