@@ -182,13 +182,13 @@ module scoreboard #(
     .popcount_o(num_commit)
   );
 
-  assign issue_cnt_n         = (flush_i) ? '0 : issue_cnt_q         - num_commit + issue_en;
-  assign commit_pointer_n[0] = (flush_i) ? '0 : commit_pointer_q[0] + num_commit;
-  assign issue_pointer_n     = (flush_i) ? '0 : issue_pointer_q     + issue_en;
+  assign issue_cnt_n         = issue_cnt_q         - num_commit + issue_en;
+  assign commit_pointer_n[0] = commit_pointer_q[0] + num_commit;
+  assign issue_pointer_n     = issue_pointer_q     + issue_en;
 
   // precompute offsets for commit slots
   for (genvar k=1; k < NR_COMMIT_PORTS; k++) begin : gen_cnt_incr
-    assign commit_pointer_n[k] = (flush_i) ? '0 : commit_pointer_n[0] + unsigned'(k);
+    assign commit_pointer_n[k] = commit_pointer_n[0] + unsigned'(k);
   end
 
   // -------------------
@@ -354,6 +354,10 @@ module scoreboard #(
   always_ff @(posedge clk_i or negedge rst_ni) begin : regs
     if(!rst_ni) begin
       mem_q                 <= '{default: 0};
+      issue_cnt_q           <= '0;
+      commit_pointer_q      <= '0;
+      issue_pointer_q       <= '0;
+    end else if(flush_i) begin
       issue_cnt_q           <= '0;
       commit_pointer_q      <= '0;
       issue_pointer_q       <= '0;
