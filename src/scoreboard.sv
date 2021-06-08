@@ -161,17 +161,6 @@ module scoreboard #(
       end
     end
 
-    // ------
-    // Flush
-    // ------
-    if (flush_i) begin
-      for (int unsigned i = 0; i < NR_ENTRIES; i++) begin
-        // set all valid flags for all entries to zero
-        mem_n[i].issued       = 1'b0;
-        mem_n[i].sbe.valid    = 1'b0;
-        mem_n[i].sbe.ex.valid = 1'b0;
-      end
-    end
   end
 
   // FIFO counter updates
@@ -358,6 +347,7 @@ module scoreboard #(
       commit_pointer_q      <= '0;
       issue_pointer_q       <= '0;
     end else if(flush_i) begin
+      mem_q                 <= '{default: 0};
       issue_cnt_q           <= '0;
       commit_pointer_q      <= '0;
       issue_pointer_q       <= '0;
